@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Youtube, RefreshCcw, Sparkles, CheckCircle2, Loader2, Music } from 'lucide-react';
+import { Youtube, RefreshCcw, Sparkles, CheckCircle2 } from 'lucide-react';
+import YoutubeLogo from "../assets/youtube.png"
 
 interface ConversionData {
   status: string;
@@ -29,7 +30,7 @@ export default function ResultPage() {
       try {
         const response = await fetch(`http://localhost:5500/spotitube/status/${conversionId}`);
         if (!response.ok) throw new Error('Failed to fetch status');
-        
+
         const result: ConversionData = await response.json();
         setData(result);
 
@@ -82,13 +83,12 @@ export default function ResultPage() {
         <div className="flex flex-col items-center text-center max-w-lg">
           <div className="relative mb-12 flex items-center justify-center h-40 w-40">
             <div className="absolute rounded-full w-full h-full bg-spotify/20 animate-pulse blur-2xl"></div>
-            <Loader2 className="w-32 h-32 text-youtube animate-spin absolute opacity-40" />
-            <Music className="w-16 h-16 text-spotify animate-bounce relative z-10" />
+            <img src={YoutubeLogo} className="w-16 h-16 text-spotify animate-bounce relative z-10" />
           </div>
-          
+
           <h2 className="text-3xl font-bold mb-4 tracking-tight">Your YouTube playlist is cooking...</h2>
           <p className="text-gray-400 mb-8">This may take a minute based on playlist size.</p>
-          
+
           <div className="bg-[#1A1A1A] border border-gray-800 p-8 rounded-3xl italic text-gray-400 mt-4 relative shadow-2xl">
             <span className="text-6xl text-spotify absolute -top-2 -left-2 opacity-30 font-serif">"</span>
             <p className="text-lg leading-relaxed relative z-10 font-medium">Without music, life would be a mistake.</p>
@@ -118,7 +118,7 @@ export default function ResultPage() {
       <div className="max-w-3xl w-full">
         <div className="bg-[#1A1A1A] border border-gray-800 rounded-3xl p-8 md:p-12 mb-8 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-spotify to-youtube"></div>
-          
+
           <div className="flex flex-col items-center text-center">
             <CheckCircle2 className="w-16 h-16 text-spotify mb-6 drop-shadow-[0_0_15px_rgba(29,185,84,0.5)]" />
             <h1 className="text-4xl font-bold mb-4">Conversion Complete!</h1>

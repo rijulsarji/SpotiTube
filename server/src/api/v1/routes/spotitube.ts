@@ -24,7 +24,7 @@ router.post('/convert', async (req: Request, res: Response) => {
             fetch(n8nWebhookUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url: spotifyUrl, conversionId })
+                body: JSON.stringify({ url: spotifyUrl, conversionId, length: 1 })
             }).catch(e => console.error('Error pinging n8n', e));
 
             // Return immediately with the ID so frontend can poll
@@ -41,7 +41,7 @@ router.get('/status/:id', (req: Request, res: Response) => {
     const { id } = req.params;
     db.get(`SELECT * FROM conversions WHERE id = ?`, [id], (err, row: any) => {
         if (err || !row) return res.status(404).json({ error: 'Not found' });
-        
+
         return res.json({
             status: row.status,
             youtubeUrl: row.youtube_url,
@@ -54,20 +54,37 @@ router.get('/status/:id', (req: Request, res: Response) => {
 // POST /api/v1/spotitube/webhook/n8n-result
 router.post('/webhook/n8n-result', (req: Request, res: Response) => {
     const { conversionId, youtubeUrl, songsConverted, bonusTracks, status } = req.body;
-    
+
     if (!conversionId) return res.status(400).json({ error: 'conversionId required' });
 
     const finalStatus = status || 'COMPLETED'; // or FAILED
     const stmt = db.prepare(`UPDATE conversions SET youtube_url = ?, songs_converted = ?, bonus_tracks = ?, status = ? WHERE id = ?`);
-    
+
     stmt.run([
         youtubeUrl || null,
         JSON.stringify(songsConverted || []),
         JSON.stringify(bonusTracks || []),
         finalStatus,
         conversionId
-    ], function(err) {
+    ], function (err) {
         if (err) return res.status(500).json({ error: 'Failed to save webhook data' });
+        return res.json({ success: true });
+    });
+});
+
+// POST /api/v1/spotitube/webhook/n8n-error
+router.post('/webhook/n8n-error', (req: Request, res: Response) => {
+    const { conversionId } = req.body;
+
+    if (!conversionId) return res.status(400).json({ error: 'conversionId required' });
+
+    const stmt = db.prepare(`UPDATE conversions SET status = ? WHERE id = ?`);
+
+    stmt.run([
+        'FAILED',
+        conversionId
+    ], function (err) {
+        if (err) return res.status(500).json({ error: 'Failed to update conversion status' });
         return res.json({ success: true });
     });
 });
@@ -96,7 +113,7 @@ router.get('/analytics', (req: Request, res: Response) => {
 // POST /api/v1/spotitube/track
 router.post('/track', (req: Request, res: Response) => {
     const { event } = req.body; // 'page_visit', 'convert_again', or 'convert_playlist'
-    
+
     if (event === 'page_visit') {
         db.run(`UPDATE stats SET page_visits = page_visits + 1 WHERE id = 1`);
         return res.json({ success: true, event: 'page_visit' });
