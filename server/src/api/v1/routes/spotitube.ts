@@ -10,6 +10,12 @@ router.post('/convert', async (req: Request, res: Response) => {
         return res.status(400).json({ error: 'Spotify URL is required' });
     }
 
+    // Input Validation: Ensure it matches a valid Spotify Playlist URL pattern
+    const spotifyRegex = /^https:\/\/open\.spotify\.com\/playlist\/[a-zA-Z0-9]+(\?.*)?$/;
+    if (!spotifyRegex.test(spotifyUrl)) {
+        return res.status(400).json({ error: 'Invalid Spotify Playlist URL format' });
+    }
+
     // Trigger n8n async (don't wait for its long process to finish)
     const n8nWebhookUrl = N8N_WEBHOOK_URL;
     if (!n8nWebhookUrl) {
