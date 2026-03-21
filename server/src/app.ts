@@ -23,8 +23,10 @@ import errorHandler from 'middleware/error';
 import arcjetMiddleware from 'middleware/arcject.middleware';
 import router from './api/v1/routes';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -41,22 +43,23 @@ app.use(limiter);
 app.use(arcjetMiddleware);
 
 app.get('/', (req, res) => {
-    logger.info('Received request for root endpoint');
-    res.send('Server is running');
-});
-
-app.use((req, res, next) => {
-    logger.warn(`Unhandled request: ${req.method} ${req.url}`);
-    next();
+  logger.info('Received request for root endpoint');
+  res.send('Server is running');
 });
 
 import { Request, Response, NextFunction } from 'express';
 
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    logger.error(`Error occurred: ${err.message}`);
-    res.status(500).send('Internal Server Error');
-});
 app.use(router);
+
+app.use((req, res, next) => {
+  logger.warn(`Unhandled request: ${req.method} ${req.url}`);
+  res.status(404).send('Not Found');
+});
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  logger.error(`Error occurred: ${err.message}`);
+  res.status(500).send('Internal Server Error');
+});
 
 app.use(errorHandler);
 
