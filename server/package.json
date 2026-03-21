@@ -7,7 +7,7 @@
     "dev": "nodemon",
     "start": "ts-node -r tsconfig-paths/register src/app.ts",
     "start:prod": "node dist/app.js",
-    "build": "npm install && tsc && tsc-alias && npm run start:prod",
+    "build": "tsc && tsc-alias",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
