@@ -9,4 +9,4 @@ const envFile = path.resolve(
 
 config({ path: envFile });
 
-export const { PORT, NODE_ENV, ARCJET_KEY } = process.env;
+export const { PORT, N8N_WEBHOOK_URL, API_BASE_URL } = process.env;

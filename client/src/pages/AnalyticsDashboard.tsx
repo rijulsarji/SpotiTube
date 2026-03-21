@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Activity, Users, RefreshCcw, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { config } from '../utils/config';
 
 interface AnalyticsData {
   pageVisits: number;
@@ -16,7 +17,7 @@ export default function AnalyticsDashboard() {
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        const res = await fetch('http://localhost:5500/spotitube/analytics');
+        const res = await fetch(`${config.API_BASE_URL}/spotitube/analytics`);
         if (!res.ok) throw new Error('Failed to fetch stats');
         const json = await res.json();
         setData(json);

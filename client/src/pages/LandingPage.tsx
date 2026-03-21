@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Wand2 } from 'lucide-react';
 import SpotifyLogo from "../assets/spotify.png"
 import YoutubeLogo from "../assets/youtube.png"
+import { config } from '../utils/config';
 
 export default function LandingPage() {
   const [url, setUrl] = useState('');
@@ -21,13 +22,13 @@ export default function LandingPage() {
 
     try {
       // Fire tracking event (no await needed)
-      fetch('http://localhost:5500/spotitube/track', {
+      fetch(`${config.API_BASE_URL}/spotitube/track`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ event: 'convert_playlist' })
       }).catch(console.error);
 
-      const response = await fetch('http://localhost:5500/spotitube/convert', {
+      const response = await fetch(`${config.API_BASE_URL}/spotitube/convert`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ spotifyUrl: url }),

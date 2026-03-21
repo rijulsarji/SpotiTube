@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Youtube, RefreshCcw, Sparkles, CheckCircle2 } from 'lucide-react';
 import YoutubeLogo from "../assets/youtube.png"
+import { config } from '../utils/config';
 
 interface ConversionData {
   status: string;
@@ -28,7 +29,7 @@ export default function ResultPage() {
 
     const pollStatus = async () => {
       try {
-        const response = await fetch(`http://localhost:5500/spotitube/status/${conversionId}`);
+        const response = await fetch(`${config.API_BASE_URL}/spotitube/status/${conversionId}`);
         if (!response.ok) throw new Error('Failed to fetch status');
 
         const result: ConversionData = await response.json();
@@ -54,7 +55,7 @@ export default function ResultPage() {
 
   const handleConvertAnother = async () => {
     try {
-      await fetch('http://localhost:5500/spotitube/track', {
+      await fetch(`${config.API_BASE_URL}/spotitube/track`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ event: 'convert_again' })

@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { db } from '../../../db';
+import { N8N_WEBHOOK_URL } from '../../../config/env';
 
 const router = express.Router();
 
@@ -7,6 +8,12 @@ router.post('/convert', async (req: Request, res: Response) => {
     const { spotifyUrl } = req.body;
     if (!spotifyUrl) {
         return res.status(400).json({ error: 'Spotify URL is required' });
+    }
+
+    // Trigger n8n async (don't wait for its long process to finish)
+    const n8nWebhookUrl = N8N_WEBHOOK_URL;
+    if (!n8nWebhookUrl) {
+        return res.status(500).json({ error: 'n8n webhook URL is not configured' });
     }
 
     try {
@@ -19,8 +26,6 @@ router.post('/convert', async (req: Request, res: Response) => {
 
             const conversionId = this.lastID; // The newly inserted ID
 
-            // Trigger n8n async (don't wait for its long process to finish)
-            const n8nWebhookUrl = 'https://distent-patience-pseudocotyledonary.ngrok-free.dev/webhook-test/f43ca30d-8641-4551-ad44-20dea0c38574';
             fetch(n8nWebhookUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

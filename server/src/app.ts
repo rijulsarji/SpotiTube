@@ -20,7 +20,6 @@ import express from 'express';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import errorHandler from 'middleware/error';
-import arcjetMiddleware from 'middleware/arcject.middleware';
 import router from './api/v1/routes';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -40,7 +39,6 @@ const limiter = rateLimit({
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 app.use(limiter);
-app.use(arcjetMiddleware);
 
 app.get('/', (req, res) => {
   logger.info('Received request for root endpoint');
