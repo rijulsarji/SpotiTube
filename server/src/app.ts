@@ -45,6 +45,10 @@ app.get('/', (req, res) => {
   res.send('Server is running');
 });
 
+app.get('/health', (req, res) => {
+  res.send('ok');
+});
+
 import { Request, Response, NextFunction } from 'express';
 
 app.use(router);
