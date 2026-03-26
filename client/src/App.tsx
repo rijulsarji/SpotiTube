@@ -3,12 +3,13 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import ResultPage from './pages/ResultPage';
 import AnalyticsDashboard from './pages/AnalyticsDashboard';
+import { BASE_URL } from './utils/env';
 
 function TrackVisits() {
 
   useEffect(() => {
     // Track visit on mount
-    fetch('http://localhost:5500/spotitube/track', {
+    fetch(`${BASE_URL}/spotitube/track`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ event: 'page_visit' })

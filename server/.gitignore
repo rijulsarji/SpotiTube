@@ -90,3 +90,6 @@ dist/
 *.tsbuildinfo
 
 # IDE / Editor
+
+.env.development.local
+.env.production.local
