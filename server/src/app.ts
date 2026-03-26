@@ -19,7 +19,7 @@ import { PORT } from './config/env';
 import express from 'express';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
-import errorHandler from 'middleware/error';
+import errorHandler from './middleware/error';
 import router from './api/v1/routes';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
