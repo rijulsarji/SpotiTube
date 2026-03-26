@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import ErrorResponse from 'helper/errorResponse';
+import ErrorResponse from '../../../helper/errorResponse';
 
 export const demo = (_req: Request, res: Response, next: NextFunction) => {
   try {
