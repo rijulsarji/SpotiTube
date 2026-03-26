@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon",
     "start": "ts-node -r tsconfig-paths/register src/app.ts",
-    "build": "tsc",
+    "build": "rm -rf dist && tsc",
+    "start:prod": "node dist/app.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
